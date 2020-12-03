@@ -3,13 +3,16 @@ import copy
 import importlib
 import json
 import os
-
+from runx.logx import logx
 import numpy as np
 import torch
 
 import discrete_BCQ
 import DQN
 import utils
+
+# logx.initialize(logdir="./logs/PongNoFrameskip_DQN_0", coolname=True, tensorboard=True)
+logx.initialize(logdir="./logs/PongNoFrameskip_BCQ_0", coolname=True, tensorboard=True)
 
 
 def interact_with_environment(env, replay_buffer, is_atari, num_actions, state_dim, device, args, parameters):
@@ -90,6 +93,8 @@ def interact_with_environment(env, replay_buffer, is_atari, num_actions, state_d
 		if done:
 			# +1 to account for 0 indexing. +0 on ep_timesteps since it will increment +1 even if done=True
 			print(f"Total T: {t+1} Episode Num: {episode_num+1} Episode T: {episode_timesteps} Reward: {episode_reward:.3f}")
+			# logx.add_scalar("Training Reward", episode_reward, t+1)
+
 			# Reset environment
 			state, done = env.reset(), False
 			episode_start = True
@@ -101,6 +106,7 @@ def interact_with_environment(env, replay_buffer, is_atari, num_actions, state_d
 		# Evaluate episode
 		if args.train_behavioral and (t + 1) % parameters["eval_freq"] == 0:
 			evaluations.append(eval_policy(policy, args.env, args.seed))
+			# logx.add_scalar("Evaluate Reward", evaluations[-1], t+1)
 			np.save(f"./results/behavioral_{setting}", evaluations)
 			policy.save(f"./models/behavioral_{setting}")
 
@@ -154,6 +160,7 @@ def train_BCQ(env, replay_buffer, is_atari, num_actions, state_dim, device, args
 			policy.train(replay_buffer)
 
 		evaluations.append(eval_policy(policy, args.env, args.seed))
+		logx.add_scalar("Evaluate Reward", evaluations[-1], training_iters+1)
 		np.save(f"./results/BCQ_{setting}", evaluations)
 
 		training_iters += int(parameters["eval_freq"])
@@ -201,7 +208,7 @@ if __name__ == "__main__":
 		"end_eps": 1e-2,
 		"eps_decay_period": 25e4,
 		# Evaluation
-		"eval_freq": 5e4,
+		"eval_freq": 5e3,
 		"eval_eps": 1e-3,
 		# Learning
 		"discount": 0.99,
@@ -275,6 +282,7 @@ if __name__ == "__main__":
 
 	if not os.path.exists("./buffers"):
 		os.makedirs("./buffers")
+
 
 	# Make env and determine properties
 	env, is_atari, state_dim, num_actions = utils.make_env(args.env, atari_preprocessing)

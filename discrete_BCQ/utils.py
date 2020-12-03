@@ -107,6 +107,7 @@ class AtariBuffer(object):
 
 
 	def load(self, save_folder, size=-1):
+		print(save_folder)
 		reward_buffer = np.load(f"{save_folder}_reward.npy")
 		size = min(int(size), self.max_size) if size > 0 else self.max_size
 		self.crt_size = min(reward_buffer.shape[0], size)
