@@ -24,3 +24,9 @@ BCQ was first introduced in our [ICML 2019 paper](https://arxiv.org/abs/1812.029
   year={2019}
 }
 ```
+### Use gym-minigrid
+```
+git clone https://github.com/mail-ecnu/gym-minigrid.git
+cd ./gym-minigrid
+pip install -e .
+```
