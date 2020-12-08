@@ -11,7 +11,12 @@ To begin a behavioral policy (DQN) needs to be trained by running:
 ```
 python main.py --train_behavioral
 ```
-This will save the PyTorch model. A new buffer can then be collected by running:
+This will save the PyTorch model.
+We can visualize the trained model by running (if the env is gym_minigrid):
+```
+python minigrid/visualize.py --env (what env you are used)
+```
+A new buffer can then be collected by running:
 ```
 python main.py --generate_buffer
 ```

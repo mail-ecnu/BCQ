@@ -36,7 +36,7 @@ def interact_with_environment(env, replay_buffer, is_atari, num_actions, state_d
 	)
 
 	if args.generate_buffer: policy.load(f"./models/behavioral_{setting}")
-	
+
 	evaluations = []
 
 	state, done = env.reset(), False
@@ -44,7 +44,7 @@ def interact_with_environment(env, replay_buffer, is_atari, num_actions, state_d
 	episode_reward = 0
 	episode_timesteps = 0
 	episode_num = 0
-	low_noise_ep = np.random.uniform(0,1) < args.low_noise_p
+	low_noise_ep = np.random.uniform(0, 1) < args.low_noise_p
 
 	# Interact with the environment for max_timesteps
 	for t in range(int(args.max_timesteps)):
@@ -55,7 +55,7 @@ def interact_with_environment(env, replay_buffer, is_atari, num_actions, state_d
 		# If policy is low noise, we take random actions with p=eval_eps.
 		# If the policy is high noise, we take random actions with p=rand_action_p.
 		if args.generate_buffer:
-			if not low_noise_ep and np.random.uniform(0,1) < args.rand_action_p - parameters["eval_eps"]:
+			if not low_noise_ep and np.random.uniform(0, 1) < args.rand_action_p - parameters["eval_eps"]:
 				action = env.action_space.sample()
 			else:
 				action = policy.select_action(np.array(state), eval=True)
@@ -77,9 +77,10 @@ def interact_with_environment(env, replay_buffer, is_atari, num_actions, state_d
 		if is_atari:
 			reward = info[0]
 			done_float = info[1]
-			
+
 		# Store data in replay buffer
-		replay_buffer.add(state, action, next_state, reward, done_float, done, episode_start)
+		replay_buffer.add(state, action, next_state, reward,
+		                  done_float, done, episode_start)
 		state = copy.copy(next_state)
 		episode_start = False
 
@@ -89,8 +90,11 @@ def interact_with_environment(env, replay_buffer, is_atari, num_actions, state_d
 
 		if done:
 			# +1 to account for 0 indexing. +0 on ep_timesteps since it will increment +1 even if done=True
-			print(f"Total T: {t+1} Episode Num: {episode_num+1} Episode T: {episode_timesteps} Reward: {episode_reward:.3f}")
+			print(
+			    f"Total T: {t+1} Episode Num: {episode_num+1} Episode T: {episode_timesteps} Reward: {episode_reward:.3f}")
 			# Reset environment
+            # with fixed random seed to generate same map
+			env.seed(args.seed)
 			state, done = env.reset(), False
 			episode_start = True
 			episode_reward = 0
@@ -140,16 +144,16 @@ def train_BCQ(env, replay_buffer, is_atari, num_actions, state_dim, device, args
 		parameters["eval_eps"]
 	)
 
-	# Load replay buffer	
+	# Load replay buffer
 	replay_buffer.load(f"./buffers/{buffer_name}")
-	
+
 	evaluations = []
 	episode_num = 0
-	done = True 
+	done = True
 	training_iters = 0
-	
-	while training_iters < args.max_timesteps: 
-		
+
+	while training_iters < args.max_timesteps:
+
 		for _ in range(int(parameters["eval_freq"])):
 			policy.train(replay_buffer)
 
@@ -168,6 +172,8 @@ def eval_policy(policy, env_name, seed, eval_episodes=10):
 
 	avg_reward = 0.
 	for _ in range(eval_episodes):
+		if 'MiniGrid' in env_name:
+			eval_env.seed(seed)
 		state, done = eval_env.reset(), False
 		while not done:
 			action = policy.select_action(np.array(state), eval=True)
@@ -253,8 +259,8 @@ if __name__ == "__main__":
 	parser.add_argument("--train_behavioral", action="store_true") # If true, train behavioral policy
 	parser.add_argument("--generate_buffer", action="store_true")  # If true, generate buffer
 	args = parser.parse_args()
-	
-	print("---------------------------------------")	
+
+	print("---------------------------------------")
 	if args.train_behavioral:
 		print(f"Setting: Training behavioral, Env: {args.env}, Seed: {args.seed}")
 	elif args.generate_buffer:
@@ -285,6 +291,9 @@ if __name__ == "__main__":
 	np.random.seed(args.seed)
 
 	device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+	if 'MiniGrid' in args.env:
+		args.max_timesteps = 1e5
 
 	# Initialize buffer
 	replay_buffer = utils.ReplayBuffer(state_dim, is_atari, atari_preprocessing, parameters["batch_size"], parameters["buffer_size"], device)
