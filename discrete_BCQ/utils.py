@@ -2,6 +2,7 @@ import cv2
 import gym
 import numpy as np
 import torch
+import gym_minigrid
 
 def ReplayBuffer(state_dim, is_atari, atari_preprocessing, batch_size, buffer_size, device):
 	if is_atari: 

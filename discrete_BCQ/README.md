@@ -32,3 +32,9 @@ Settings can be adjusted by changing the dicts in main.py. This is a reproductio
   year={2019}
 }
 ```
+### Use gym-minigrid
+```
+git clone https://github.com/mail-ecnu/gym-minigrid.git
+cd ./gym-minigrid
+pip install -e .
+```
