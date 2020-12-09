@@ -66,7 +66,7 @@ regular_parameters = {
 # Load parameters
 parser = argparse.ArgumentParser()
 parser.add_argument("--env", default="MountainCar-v0")  # OpenAI gym environment name
-parser.add_argument("--seed", default=0, type=int)  # Sets Gym, PyTorch and Numpy seeds
+parser.add_argument("--seed", default=1, type=int)  # Sets Gym, PyTorch and Numpy seeds
 parser.add_argument("--buffer_name", default="Default")  # Prepends name to filename
 parser.add_argument("--max_timesteps", default=1e6, type=int)  # Max time steps to run environment or train for
 parser.add_argument("--BCQ_threshold", default=0.3, type=float)  # Threshold hyper-parameter for BCQ
@@ -118,8 +118,4 @@ if USE_PBRS:
         new_replay_buffer.reward[i] = new_replay_buffer.reward[i] + shaped_reward.data.to("cpu").numpy()
         print(i, new_replay_buffer.reward[i])
     new_replay_buffer.save(f"./new_buffers/{new_buffer_name}")
-
-
-
-
 

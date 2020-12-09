@@ -11,8 +11,8 @@ import discrete_BCQ
 import DQN
 import utils
 
-logx.initialize(logdir="./logs/CartPole-v1_DQN_a", coolname=True, tensorboard=True)
-# logx.initialize(logdir="./logs/PongNoFrameskip_BCQ_a", coolname=True, tensorboard=True)
+# logx.initialize(logdir="./logs/PongNoFrameskip_DQN_a", coolname=True, tensorboard=True)
+logx.initialize(logdir="./logs/PongNoFrameskip_BCQ_f", coolname=True, tensorboard=True)
 
 
 def interact_with_environment(env, replay_buffer, is_atari, num_actions, state_dim, device, args, parameters):
@@ -234,7 +234,7 @@ if __name__ == "__main__":
 
     # Load parameters
     parser = argparse.ArgumentParser()
-    parser.add_argument("--env", default="CartPole-v1")  # OpenAI gym environment name
+    parser.add_argument("--env", default="PongNoFrameskip-v0")  # OpenAI gym environment name
     parser.add_argument("--seed", default=0, type=int)  # Sets Gym, PyTorch and Numpy seeds
     parser.add_argument("--buffer_name", default="Default")  # Prepends name to filename
     parser.add_argument("--max_timesteps", default=1e6, type=int)  # Max time steps to run environment or train for

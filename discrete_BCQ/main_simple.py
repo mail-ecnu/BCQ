@@ -12,7 +12,7 @@ import DQN
 import utils
 
 # logx.initialize(logdir="./logs/PongNoFrameskip_DQN_0", coolname=True, tensorboard=True)
-logx.initialize(logdir="./logs/MountainCar-v0_BCQ_0", coolname=True, tensorboard=True)
+logx.initialize(logdir="./logs/MountainCar-v0_BCQ_1", coolname=True, tensorboard=True)
 
 
 def interact_with_environment(env, replay_buffer, is_atari, num_actions, state_dim, device, args, parameters):
@@ -228,17 +228,17 @@ if __name__ == "__main__":
 
     regular_parameters = {
         # Exploration
-        "start_timesteps": 1e3,
-        "initial_eps": 0.1,
-        "end_eps": 0.1,
-        "eps_decay_period": 1,
+        "start_timesteps": 5e3,
+        "initial_eps": 0.9,
+        "end_eps": 0.01,
+        "eps_decay_period": 10e4,
         # Evaluation
         "eval_freq": 5e3,
         "eval_eps": 0,
         # Learning
-        "discount": 0.99,
+        "discount": 1,
         "buffer_size": 1e6,
-        "batch_size": 200,
+        "batch_size": 400,
         "optimizer": "Adam",
         "optimizer_parameters": {
             "lr": 3e-4
@@ -252,7 +252,7 @@ if __name__ == "__main__":
     # Load parameters
     parser = argparse.ArgumentParser()
     parser.add_argument("--env", default="MountainCar-v0")  # OpenAI gym environment name
-    parser.add_argument("--seed", default=0, type=int)  # Sets Gym, PyTorch and Numpy seeds
+    parser.add_argument("--seed", default=1, type=int)  # Sets Gym, PyTorch and Numpy seeds
     parser.add_argument("--buffer_name", default="Default")  # Prepends name to filename
     parser.add_argument("--max_timesteps", default=1e6, type=int)  # Max time steps to run environment or train for
     parser.add_argument("--BCQ_threshold", default=0.3, type=float)  # Threshold hyper-parameter for BCQ

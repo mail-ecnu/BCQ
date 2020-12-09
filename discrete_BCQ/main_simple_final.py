@@ -11,8 +11,8 @@ import discrete_BCQ
 import DQN
 import utils
 
-logx.initialize(logdir="./logs/MountainCar-v0_DQN_a", coolname=True, tensorboard=True)
-# logx.initialize(logdir="./logs/MountainCar-v0_BCQ_a", coolname=True, tensorboard=True)
+# logx.initialize(logdir="./logs/MountainCar-v0_DQN_a", coolname=True, tensorboard=True)
+logx.initialize(logdir="./logs/MountainCar-v0_BCQ_a", coolname=True, tensorboard=True)
 
 
 def interact_with_environment(env, replay_buffer, is_atari, num_actions, state_dim, device, args, parameters):

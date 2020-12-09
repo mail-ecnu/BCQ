@@ -11,8 +11,8 @@ import discrete_BCQ
 import DQN
 import utils
 
-# logx.initialize(logdir="./logs/PongNoFrameskip_DQN_0", coolname=True, tensorboard=True)
-logx.initialize(logdir="./logs/PongNoFrameskip_BCQ_0", coolname=True, tensorboard=True)
+logx.initialize(logdir="./logs/PongNoFrameskip_DQN_1", coolname=True, tensorboard=True)
+# logx.initialize(logdir="./logs/PongNoFrameskip_BCQ_1", coolname=True, tensorboard=True)
 
 
 def interact_with_environment(env, replay_buffer, is_atari, num_actions, state_dim, device, args, parameters):
@@ -93,7 +93,7 @@ def interact_with_environment(env, replay_buffer, is_atari, num_actions, state_d
 		if done:
 			# +1 to account for 0 indexing. +0 on ep_timesteps since it will increment +1 even if done=True
 			print(f"Total T: {t+1} Episode Num: {episode_num+1} Episode T: {episode_timesteps} Reward: {episode_reward:.3f}")
-			# logx.add_scalar("Training Reward", episode_reward, t+1)
+			logx.add_scalar("Training Reward", episode_reward, t+1)
 
 			# Reset environment
 			state, done = env.reset(), False
@@ -106,7 +106,7 @@ def interact_with_environment(env, replay_buffer, is_atari, num_actions, state_d
 		# Evaluate episode
 		if args.train_behavioral and (t + 1) % parameters["eval_freq"] == 0:
 			evaluations.append(eval_policy(policy, args.env, args.seed))
-			# logx.add_scalar("Evaluate Reward", evaluations[-1], t+1)
+			logx.add_scalar("Evaluate Reward", evaluations[-1], t+1)
 			np.save(f"./results/behavioral_{setting}", evaluations)
 			policy.save(f"./models/behavioral_{setting}")
 
