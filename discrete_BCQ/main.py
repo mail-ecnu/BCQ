@@ -15,7 +15,7 @@ import utils
 def interact_with_environment(env, replay_buffer, is_atari, num_actions, state_dim, device, args, parameters):
 	# For saving files
 	setting = f"{args.env}_{args.seed}"
-	buffer_name = f"{args.buffer_name}_{setting}"
+	buffer_name = f"{args.buffer_name}_{setting}_{args.low_noise_p}_{args.rand_action_p}"
 
 	# Initialize and load policy
 	policy = DQN.DQN(
@@ -122,8 +122,8 @@ def interact_with_environment(env, replay_buffer, is_atari, num_actions, state_d
 # Trains BCQ offline
 def train_BCQ(env, replay_buffer, is_atari, num_actions, state_dim, device, args, parameters):
 	# For saving files
-	setting = f"{args.env}_{args.seed}"
-	buffer_name = f"{args.buffer_name}_{setting}"
+	setting = f"{args.env}_{args.seed}_{args.low_noise_p}_{args.rand_action_p}_{args.BCQ_threshold}"
+	buffer_name = f"{args.buffer_name}_{args.env}_{args.seed}_{args.low_noise_p}_{args.rand_action_p}"
 
 	# Initialize and load policy
 	policy = discrete_BCQ.discrete_BCQ(

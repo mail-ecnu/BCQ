@@ -3,3 +3,4 @@ results/
 __pycache__/
 buffers/
 *.gif
+.ipynb_checkpoints/
