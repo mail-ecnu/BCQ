@@ -7,3 +7,9 @@
 .idea/modules.xml
 .idea/vcs.xml
 *.pyc
+models/
+results/
+__pycache__/
+buffers/
+*.gif
+.ipynb_checkpoints/
